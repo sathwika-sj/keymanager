@@ -3,7 +3,7 @@
 #installs the pkcs11 libraries.
 set -e
 
-DEFAULT_ZIP_PATH=artifactory/libs-release-local/hsm/client.zip
+DEFAULT_ZIP_PATH=https://www.dropbox.com/scl/fi/hiykpilg0oxs235eoj4of/ncipher_client.zip?rlkey=5ocm0tahzpz2hwilgkmw0j64q&st=n7bzkz47&dl=0
 [ -z "$hsm_zip_file_path" ] && zip_path="$DEFAULT_ZIP_PATH" || zip_path="$hsm_zip_file_path"
 
 echo "Download the client from $artifactory_url_env"
