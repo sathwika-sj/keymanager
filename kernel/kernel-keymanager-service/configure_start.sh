@@ -1,27 +1,25 @@
 #!/bin/bash
-# Installs the pkcs11 libraries.
+
+#installs the pkcs11 libraries.
 set -e
 
-DEFAULT_ZIP_PATH="ncipher_client.zip?rlkey=5ocm0tahzpz2hwilgkmw0j64q&st=n7bzkz47&dl=0"
+DEFAULT_ZIP_PATH=artifactory/libs-release-local/hsm/client.zip
 [ -z "$hsm_zip_file_path" ] && zip_path="$DEFAULT_ZIP_PATH" || zip_path="$hsm_zip_file_path"
 
 echo "Download the client from $artifactory_url_env"
 echo "Zip File Path: $zip_path"
 
-wget -q --show-progress "https://www.dropbox.com/scl/fi/hiykpilg0oxs235eoj4of/$zip_path"
-echo "Downloaded https://www.dropbox.com/scl/fi/hiykpilg0oxs235eoj4of/$zip_path"
+wget -q --show-progress "$artifactory_url_env/$zip_path"
+echo "Downloaded $artifactory_url_env/$zip_path"
 
-# Extract the file name from the URL
-FILE_NAME=${zip_path%%\?*}
-
-echo "FILE_NAME: $FILE_NAME"
+FILE_NAME=${zip_path##*/}
 
 DIR_NAME=$hsm_local_dir_name
 
-has_parent=$(zipinfo -1 "$FILE_NAME" | awk -F/ '{print $1}' | sort -u | wc -l)
+has_parent=$(zipinfo -1 "$FILE_NAME" | awk '{split($NF,a,"/");print a[1]}' | sort -u | wc -l)
 if test "$has_parent" -eq 1; then
   echo "Zip has a parent directory inside"
-  dirname=$(zipinfo -1 "$FILE_NAME" | awk -F/ '{print $1}' | sort -u | head -n 1)
+  dirname=$(zipinfo -1 "$FILE_NAME" | awk '{split($NF,a,"/");print a[1]}' | sort -u | head -n 1)
   echo "Unzip directory"
   unzip $FILE_NAME
   echo "Renaming directory"
