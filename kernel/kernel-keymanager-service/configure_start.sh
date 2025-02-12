@@ -12,9 +12,13 @@ echo "Zip File Path: $zip_path"
 wget -q --show-progress "https://www.dropbox.com/scl/fi/hiykpilg0oxs235eoj4of/$zip_path"
 echo "Downloaded https://www.dropbox.com/scl/fi/hiykpilg0oxs235eoj4of/$zip_path"
 
+export FILE_NAMES=${zip_path##*/}
+
+echo "FILE_NAME: $FILE_NAMES"
+
 FILE_NAME=${zip_path##*/}
 
-echo " FILE_NAME: $FILE_NAME"
+
 
 
 DIR_NAME=$hsm_local_dir_name
