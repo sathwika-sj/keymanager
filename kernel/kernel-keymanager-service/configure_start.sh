@@ -14,6 +14,9 @@ echo "Downloaded https://www.dropbox.com/scl/fi/hiykpilg0oxs235eoj4of/$zip_path"
 
 FILE_NAME=${zip_path##*/}
 
+echo " FILE_NAME: $FILE_NAME"
+
+
 DIR_NAME=$hsm_local_dir_name
 
 has_parent=$(zipinfo -1 "$FILE_NAME" | awk '{split($NF,a,"?");print a[1]}' | sort -u | wc -l)
