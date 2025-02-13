@@ -33,6 +33,8 @@ else
 fi
 
 echo "Attempting to install"
+pwd
+ls
 cd ./$DIR_NAME && chmod +x install.sh && sudo ./install.sh
 echo "Installation complete"
 cd $work_dir
