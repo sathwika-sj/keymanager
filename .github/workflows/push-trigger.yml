@@ -21,6 +21,7 @@ on:
       - develop
       - MOSIP*
       - ENTRUST*
+      - entrust*
 
 jobs:
   build-kernel:
