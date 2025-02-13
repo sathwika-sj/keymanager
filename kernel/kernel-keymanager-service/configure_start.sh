@@ -37,7 +37,9 @@ pwd
 ls
 cd ./hsm-client
 ls
-chmod +x install.sh && sudo ./install.sh
+chmod +x install.sh 
+ls -ltar
+sudo ./install.sh
 echo "Installation complete"
 cd $work_dir
 
