@@ -9,8 +9,8 @@ DEFAULT_ZIP_PATH=artifactory/libs-release-local/hsm/client.zip
 echo "Download the client from $artifactory_url_env"
 echo "Zip File Path: $zip_path"
 
-wget -q --show-progress "$artifactory_url_env/$zip_path"
-echo "Downloaded $artifactory_url_env/$zip_path"
+wget -q --show-progress "http://172.17.0.3:8080/$zip_path"
+echo "Downloaded http://172.17.0.3:8080/$zip_path"
 
 FILE_NAME=${zip_path##*/}
 
