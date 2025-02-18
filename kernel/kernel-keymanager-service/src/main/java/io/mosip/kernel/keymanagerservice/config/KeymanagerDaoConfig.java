@@ -64,8 +64,11 @@ public class KeymanagerDaoConfig {
 		HikariConfig hikariConfig = new HikariConfig();
 		hikariConfig.setDriverClassName(environment.getProperty("keymanager.persistence.jdbc.driver"));
 		hikariConfig.setJdbcUrl(environment.getProperty("keymanager_database_url"));
+		System.out.println("keymanager_database_url" + environment.getProperty("keymanager_database_url"));
 		hikariConfig.setUsername(environment.getProperty("keymanager_database_username"));
+		System.out.println("keymanager_database_username" + environment.getProperty("keymanager_database_username"));
 		hikariConfig.setPassword(environment.getProperty("keymanager_database_password"));
+		System.out.println("keymanager_database_password" + environment.getProperty("keymanager_database_password"));
 		if (environment.containsProperty(HibernatePersistenceConstant.KEYMANAGER_JDBC_SCHEMA)) {
 			hikariConfig.setSchema(environment.getProperty(HibernatePersistenceConstant.KEYMANAGER_JDBC_SCHEMA));
 		}
