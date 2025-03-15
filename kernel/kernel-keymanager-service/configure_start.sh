@@ -33,7 +33,14 @@ else
 fi
 
 echo "Attempting to install"
-cd ./$DIR_NAME && chmod +x install.sh && sudo ./install.sh
+pwd
+ls
+cd ./hsm-client
+ls
+chmod +x install.sh 
+ls -ltar
+sed -i 's/\r$//' install.sh
+sudo ./install.sh
 echo "Installation complete"
 cd $work_dir
 
