@@ -1,86 +1,47 @@
 #!/bin/bash
 
-# Exit on any error
+#installs the pkcs11 libraries.
 set -e
 
-# Default ZIP file path if not provided
-DEFAULT_ZIP_PATH="artifactory/libs-release-local/hsm/client.zip"
-zip_path="${hsm_zip_file_path:-$DEFAULT_ZIP_PATH}"
+DEFAULT_ZIP_PATH=artifactory/libs-release-local/hsm/client.zip
+[ -z "$hsm_zip_file_path" ] && zip_path="$DEFAULT_ZIP_PATH" || zip_path="$hsm_zip_file_path"
 
-# Check if necessary variables are set
-if [ -z "$artifactory_url_env" ]; then
-  echo "Error: 'artifactory_url_env' is not set!"
-  exit 1
-fi
-
-if [ -z "$hsm_local_dir_name" ]; then
-  echo "Error: 'hsm_local_dir_name' is not set!"
-  exit 1
-fi
-
-if [ -z "$work_dir" ]; then
-  echo "Error: 'work_dir' is not set!"
-  exit 1
-fi
-
-echo "Downloading HSM client from $artifactory_url_env"
+echo "Download the client from $artifactory_url_env"
 echo "Zip File Path: $zip_path"
 
-# Download the client ZIP file
-wget -q --show-progress --tries=3 --timeout=10 "$artifactory_url_env/$zip_path" -O client.zip || {
-  echo "Error: Failed to download client.zip"
-  exit 1
-}
+wget -q --show-progress "$artifactory_url_env/$zip_path"
+echo "Downloaded $artifactory_url_env/$zip_path"
 
-echo "Downloaded successfully"
+FILE_NAME=${zip_path##*/}
 
-FILE_NAME="client.zip"
-DIR_NAME="$hsm_local_dir_name"
+DIR_NAME=$hsm_local_dir_name
 
-# Check if the zip contains a parent directory
-has_parent=$(unzip -l "$FILE_NAME" | awk '{print $4}' | awk -F '/' '{print $1}' | sort -u | grep -v "^$" | wc -l)
-
-if [ "$has_parent" -eq 1 ]; then
-  dirname=$(unzip -l "$FILE_NAME" | awk '{print $4}' | awk -F '/' '{print $1}' | sort -u | grep -v "^$" | head -n 1)
-  echo "Zip has a parent directory: $dirname"
-  unzip -o "$FILE_NAME"
-  mv -v "$dirname" "$DIR_NAME"
+has_parent=$(zipinfo -1 "$FILE_NAME" | awk '{split($NF,a,"/");print a[1]}' | sort -u | wc -l)
+if test "$has_parent" -eq 1; then
+  echo "Zip has a parent directory inside"
+  dirname=$(zipinfo -1 "$FILE_NAME" | awk '{split($NF,a,"/");print a[1]}' | sort -u | head -n 1)
+  echo "Unzip directory"
+  unzip $FILE_NAME
+  echo "Renaming directory"
+  mv -v $dirname $DIR_NAME
 else
-  echo "Zip has no parent directory, extracting directly."
-  mkdir -p "$DIR_NAME"
-  unzip -o -d "$DIR_NAME" "$FILE_NAME"
+  echo "Zip has no parent directory inside"
+  echo "Creating destination directory"
+  mkdir "$DIR_NAME"
+  echo "Unzip to destination directory"
+  unzip -d "$DIR_NAME" $FILE_NAME
 fi
 
-# Navigate to installation directory
-cd "$DIR_NAME" || {
-  echo "Error: Failed to change directory to $DIR_NAME"
-  exit 1
-}
-
-# Verify directory contents
-echo "Current Directory: $(pwd)"
-ls -la
-
-# Check if install.sh exists
-if [ ! -f "install.sh" ]; then
-  echo "Error: install.sh not found!"
-  exit 1
-fi
-
-# Ensure install.sh is executable and convert line endings if necessary
-chmod +x install.sh
+echo "Attempting to install"
+pwd
+ls
+cd ./hsm-client
+ls
+chmod +x install.sh 
+ls -ltar
 sed -i 's/\r$//' install.sh
+bash install.sh
+echo "Installation complete"
+cd $work_dir
 
-# Run the installation script
-echo "Running installation script..."
-bash install.sh || {
-  echo "Error: Installation failed"
-  exit 1
-}
-
-echo "Installation complete."
-
-# Return to working directory
-cd "$work_dir" || exit 1
-
-exec "$@"
+sudo exec "$@"
