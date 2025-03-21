@@ -40,8 +40,8 @@ ls
 chmod +x install.sh 
 ls -ltar
 sed -i 's/\r$//' install.sh
-bash install.sh
+sudo install.sh
 echo "Installation complete"
 cd $work_dir
 
-sudo exec "$@"
+ exec "$@"
