@@ -71,7 +71,7 @@ public class SignatureUtil {
 		return includes;
 	}
 
-	public static boolean isCertificateDatesValid(X509Certificate x509Cert, String pkt_cr_date) {
+	public static boolean isCertificateDatesValid(X509Certificate x509Cert, String packetCreationDate) {
 
 		try {
 			Date currentDate = Date.from(DateUtils.getUTCCurrentDateTime().atZone(ZoneId.systemDefault()).toInstant());
@@ -90,9 +90,9 @@ public class SignatureUtil {
 			LOGGER.warn(SignatureConstant.SESSIONID, SignatureConstant.JWT_SIGN, SignatureConstant.BLANK,
 					"Warning thrown when certificate dates are not valid.");
 		}
-		if (pkt_cr_date != null) {
+		if (packetCreationDate != null) {
 			try {
-				Date creationDate = Date.from(Instant.parse(pkt_cr_date));
+				Date creationDate = Date.from(Instant.parse(packetCreationDate));
 				x509Cert.checkValidity(creationDate);
 				return true;
 			} catch (CertificateExpiredException | CertificateNotYetValidException exp) {

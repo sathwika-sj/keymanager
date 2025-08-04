@@ -322,7 +322,7 @@ public class SignatureServiceImpl implements SignatureService {
 	public JWTSignatureVerifyResponseDto jwtVerify(JWTSignatureVerifyRequestDto jwtVerifyRequestDto) {
 
 		String signedData = jwtVerifyRequestDto.getJwtSignatureData();
-		String pkt_cr_date= jwtVerifyRequestDto.getPacketCreationDate();
+		String packetCreationDate= jwtVerifyRequestDto.getPacketCreationDate();
 		if (!SignatureUtil.isDataValid(signedData)) {
 			LOGGER.error(SignatureConstant.SESSIONID, SignatureConstant.JWT_SIGN, SignatureConstant.BLANK,
 					"Provided Signed Data value is invalid.");
@@ -347,10 +347,10 @@ public class SignatureServiceImpl implements SignatureService {
 		boolean signatureValid = false;
 		Certificate certToVerify = certificateExistsInHeader(jwtTokens[0]);
 		if (Objects.nonNull(certToVerify)){
-			signatureValid = verifySignature(jwtTokens, encodedActualData, certToVerify,pkt_cr_date);
+			signatureValid = verifySignature(jwtTokens, encodedActualData, certToVerify, packetCreationDate);
 		} else {
 			Certificate reqCertToVerify = getCertificateToVerify(reqCertData, applicationId, referenceId);
-			signatureValid = verifySignature(jwtTokens, encodedActualData, reqCertToVerify,pkt_cr_date);
+			signatureValid = verifySignature(jwtTokens, encodedActualData, reqCertToVerify, packetCreationDate);
 		}
 
 		JWTSignatureVerifyResponseDto responseDto = new JWTSignatureVerifyResponseDto();
@@ -395,10 +395,10 @@ public class SignatureServiceImpl implements SignatureService {
 		return null;
 	}
 
-	private boolean verifySignature(String[] jwtTokens, String actualData, Certificate certToVerify, String pkt_cr_date) {
+	private boolean verifySignature(String[] jwtTokens, String actualData, Certificate certToVerify, String packetCreationDate) {
 		JsonWebSignature jws = new JsonWebSignature();
 		try {
-			boolean validCert = SignatureUtil.isCertificateDatesValid((X509Certificate) certToVerify, pkt_cr_date);
+			boolean validCert = SignatureUtil.isCertificateDatesValid((X509Certificate) certToVerify, packetCreationDate);
 			if (!validCert) {
 				LOGGER.error(SignatureConstant.SESSIONID, SignatureConstant.JWT_SIGN, SignatureConstant.BLANK,
 					"Error certificate dates are not valid.");
