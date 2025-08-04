@@ -57,4 +57,7 @@ public class JWTSignatureVerifyRequestDto {
 	@ApiModelProperty(notes = "Domain to be considered to validate trust store.", example = "", required = false)
 	private String domain;
 
+	@ApiModelProperty(notes = "packetCreationDate to be considered to validate trust store.", example = "", required = false)
+	private String packetCreationDate;
+
 }

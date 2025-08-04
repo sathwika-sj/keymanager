@@ -322,6 +322,7 @@ public class SignatureServiceImpl implements SignatureService {
 	public JWTSignatureVerifyResponseDto jwtVerify(JWTSignatureVerifyRequestDto jwtVerifyRequestDto) {
 
 		String signedData = jwtVerifyRequestDto.getJwtSignatureData();
+		String pkt_cr_date= jwtVerifyRequestDto.getPacketCreationDate();
 		if (!SignatureUtil.isDataValid(signedData)) {
 			LOGGER.error(SignatureConstant.SESSIONID, SignatureConstant.JWT_SIGN, SignatureConstant.BLANK,
 					"Provided Signed Data value is invalid.");
@@ -346,10 +347,10 @@ public class SignatureServiceImpl implements SignatureService {
 		boolean signatureValid = false;
 		Certificate certToVerify = certificateExistsInHeader(jwtTokens[0]);
 		if (Objects.nonNull(certToVerify)){
-			signatureValid = verifySignature(jwtTokens, encodedActualData, certToVerify);
+			signatureValid = verifySignature(jwtTokens, encodedActualData, certToVerify,pkt_cr_date);
 		} else {
 			Certificate reqCertToVerify = getCertificateToVerify(reqCertData, applicationId, referenceId);
-			signatureValid = verifySignature(jwtTokens, encodedActualData, reqCertToVerify);
+			signatureValid = verifySignature(jwtTokens, encodedActualData, reqCertToVerify,pkt_cr_date);
 		}
 
 		JWTSignatureVerifyResponseDto responseDto = new JWTSignatureVerifyResponseDto();
@@ -394,10 +395,10 @@ public class SignatureServiceImpl implements SignatureService {
 		return null;
 	}
 
-	private boolean verifySignature(String[] jwtTokens, String actualData, Certificate certToVerify) {
+	private boolean verifySignature(String[] jwtTokens, String actualData, Certificate certToVerify, String pkt_cr_date) {
 		JsonWebSignature jws = new JsonWebSignature();
 		try {
-			boolean validCert = SignatureUtil.isCertificateDatesValid((X509Certificate) certToVerify);
+			boolean validCert = SignatureUtil.isCertificateDatesValid((X509Certificate) certToVerify, pkt_cr_date);
 			if (!validCert) {
 				LOGGER.error(SignatureConstant.SESSIONID, SignatureConstant.JWT_SIGN, SignatureConstant.BLANK,
 					"Error certificate dates are not valid.");

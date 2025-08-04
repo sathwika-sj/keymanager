@@ -9,6 +9,7 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,7 +71,7 @@ public class SignatureUtil {
 		return includes;
 	}
 
-	public static boolean isCertificateDatesValid(X509Certificate x509Cert) {
+	public static boolean isCertificateDatesValid(X509Certificate x509Cert, String pkt_cr_date) {
 
 		try {
 			Date currentDate = Date.from(DateUtils.getUTCCurrentDateTime().atZone(ZoneId.systemDefault()).toInstant());
@@ -89,6 +90,17 @@ public class SignatureUtil {
 			LOGGER.warn(SignatureConstant.SESSIONID, SignatureConstant.JWT_SIGN, SignatureConstant.BLANK,
 					"Warning thrown when certificate dates are not valid.");
 		}
+		if (pkt_cr_date != null) {
+			try {
+				Date creationDate = Date.from(Instant.parse(pkt_cr_date));
+				x509Cert.checkValidity(creationDate);
+				return true;
+			} catch (CertificateExpiredException | CertificateNotYetValidException exp) {
+				LOGGER.warn(SignatureConstant.SESSIONID, SignatureConstant.JWT_SIGN, SignatureConstant.BLANK,
+						"Warning thrown when certificate dates are not valid.");
+			}
+		}
+
 		return false;
 	}
 
