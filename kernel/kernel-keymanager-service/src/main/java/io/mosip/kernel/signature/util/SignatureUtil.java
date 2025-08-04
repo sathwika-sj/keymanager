@@ -11,6 +11,7 @@ import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -95,11 +96,14 @@ public class SignatureUtil {
 				Date creationDate = Date.from(Instant.parse(packetCreationDate));
 				x509Cert.checkValidity(creationDate);
 				return true;
+			} catch (DateTimeParseException e) {
+				LOGGER.warn("Invalid packet creation date format");
 			} catch (CertificateExpiredException | CertificateNotYetValidException exp) {
 				LOGGER.warn(SignatureConstant.SESSIONID, SignatureConstant.JWT_SIGN, SignatureConstant.BLANK,
 						"Warning thrown when certificate dates are not valid.");
 			}
 		}
+
 
 		return false;
 	}
