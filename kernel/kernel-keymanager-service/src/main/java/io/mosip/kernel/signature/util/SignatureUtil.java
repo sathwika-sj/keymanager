@@ -9,7 +9,9 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
+import java.time.Instant;
 import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -70,7 +72,7 @@ public class SignatureUtil {
 		return includes;
 	}
 
-	public static boolean isCertificateDatesValid(X509Certificate x509Cert) {
+	public static boolean isCertificateDatesValid(X509Certificate x509Cert, String packetCreationDate) {
 
 		try {
 			Date currentDate = Date.from(DateUtils.getUTCCurrentDateTime().atZone(ZoneId.systemDefault()).toInstant());
@@ -89,6 +91,20 @@ public class SignatureUtil {
 			LOGGER.warn(SignatureConstant.SESSIONID, SignatureConstant.JWT_SIGN, SignatureConstant.BLANK,
 					"Warning thrown when certificate dates are not valid.");
 		}
+		if (packetCreationDate != null) {
+			try {
+				Date creationDate = Date.from(Instant.parse(packetCreationDate));
+				x509Cert.checkValidity(creationDate);
+				return true;
+			} catch (DateTimeParseException e) {
+				LOGGER.warn("Invalid packet creation date format");
+			} catch (CertificateExpiredException | CertificateNotYetValidException exp) {
+				LOGGER.warn(SignatureConstant.SESSIONID, SignatureConstant.JWT_SIGN, SignatureConstant.BLANK,
+						"Warning thrown when certificate dates are not valid.");
+			}
+		}
+
+
 		return false;
 	}
 
