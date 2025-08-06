@@ -93,6 +93,7 @@ public class SignatureUtil {
 		}
 		if (packetCreationDate != null) {
 			try {
+				LOGGER.info("Checking certificate validity with packet creation date:", packetCreationDate);
 				Date creationDate = Date.from(Instant.parse(packetCreationDate));
 				x509Cert.checkValidity(creationDate);
 				return true;
