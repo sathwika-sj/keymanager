@@ -92,8 +92,8 @@ public class KeysGenerator {
         // Not required to check for key exists or not, because keymanager is checking key exists before generating new key.
         //String rootKeyAlias = getKeyAlias(ROOT_APP_ID, BLANK_REF_ID);
         //if (Objects.isNull(rootKeyAlias)) {
-        generateMasterKey(ROOT_APP_ID, BLANK_REF_ID, rootCommonName);
-        LOGGER.info("Generated ROOT Key.");
+       // generateMasterKey(ROOT_APP_ID, BLANK_REF_ID, rootCommonName);
+        //LOGGER.info("Generated ROOT Key.");
         //}
 
         List<String> keyAppIdsList = getListKeys();
@@ -109,36 +109,36 @@ public class KeysGenerator {
             if (referenceId.equalsIgnoreCase(IDENTITY_CACHE_REF_ID)) {
                 randomKeysGenerator.generateRandomKeys(applicationId, referenceId);
                 LOGGER.info("Generated Identity Cache Key & ZK Random Keys(10K).");
-            } else {
-                /* String masterKeyAlias = getKeyAlias(applicationId, referenceId);
-                if(Objects.isNull(masterKeyAlias)) {
-                    generateMasterKey(applicationId, referenceId, commonName);
-                    LOGGER.info("Generated Master Key for Application ID & ReferenceId: " + appId);
-                } else {
-                    LOGGER.info("Master Key Already exists for Application ID & ReferenceId: " + appId);
-                } */
-                generateMasterKey(applicationId, referenceId, commonName);
-                LOGGER.info("Generated Master Key for Application ID & ReferenceId: " + appId);
+            // } else {
+            //     /* String masterKeyAlias = getKeyAlias(applicationId, referenceId);
+            //     if(Objects.isNull(masterKeyAlias)) {
+            //         generateMasterKey(applicationId, referenceId, commonName);
+            //         LOGGER.info("Generated Master Key for Application ID & ReferenceId: " + appId);
+            //     } else {
+            //         LOGGER.info("Master Key Already exists for Application ID & ReferenceId: " + appId);
+            //     } */
+            //     generateMasterKey(applicationId, referenceId, commonName);
+            //     LOGGER.info("Generated Master Key for Application ID & ReferenceId: " + appId);
             }
         });
 
-        List<String> baseKeysList = getBaseKeysList();
+        // List<String> baseKeysList = getBaseKeysList();
 
-        baseKeysList.forEach(appId -> {
-            String[] strArr = appId.split(":", -1);
-            if (strArr.length == 2) {
-                String applicationId = strArr[0];
-                String referenceId = strArr[1];
-                if (referenceId.length() != 0) {
-                    generateBaseKey(applicationId, referenceId);
-                    LOGGER.info("Base Key Generation Successful. AppId: " +  applicationId + ", refId: " + referenceId);
-                } else {
-                    LOGGER.warning("Configured Reference Id is not valid. Configured value: " + appId);
-                }
-            } else {
-                LOGGER.warning("Configured Base Key is not valid. Configured value: " + appId);
-            }
-        });
+        // baseKeysList.forEach(appId -> {
+        //     String[] strArr = appId.split(":", -1);
+        //     if (strArr.length == 2) {
+        //         String applicationId = strArr[0];
+        //         String referenceId = strArr[1];
+        //         if (referenceId.length() != 0) {
+        //             generateBaseKey(applicationId, referenceId);
+        //             LOGGER.info("Base Key Generation Successful. AppId: " +  applicationId + ", refId: " + referenceId);
+        //         } else {
+        //             LOGGER.warning("Configured Reference Id is not valid. Configured value: " + appId);
+        //         }
+        //     } else {
+        //         LOGGER.warning("Configured Base Key is not valid. Configured value: " + appId);
+        //     }
+        // });
     }
 
     
