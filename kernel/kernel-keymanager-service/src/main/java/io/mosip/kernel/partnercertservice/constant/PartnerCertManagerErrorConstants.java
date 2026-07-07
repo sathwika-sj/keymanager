@@ -19,7 +19,7 @@ public enum PartnerCertManagerErrorConstants {
 
 	ROOT_CA_NOT_FOUND("KER-PCM-005", "Root CA Certificate not found."),
 
-	ROOT_INTER_CA_NOT_FOUND("KER-PCM-006", "Root CA/Intermediate CA Certificates not found."),
+	ROOT_INTER_CA_NOT_FOUND("KER-PCM-006", "Upload the correct partner certificate. Corresponding Root CA/Intermediate CA certificate not found."),
 
 	INVALID_CERT_VERSION("KER-PCM-007", "Certificate version not supported."),
 
