@@ -21,6 +21,7 @@ on:
       - develop
       - MOSIP*
       - tf_nira_dev
+      - tf_nira_preprod
 
 jobs:
   build-kernel:
